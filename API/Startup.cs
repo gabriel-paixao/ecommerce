@@ -1,6 +1,5 @@
-using API.Helpers;
-using AutoMapper;
-using Core.Interfaces;
+using API.Extensions;
+using API.Middleware;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -23,30 +21,23 @@ namespace API
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
-            });
+            services.AddApplicationServices();
             services.AddDbContext<StoreContext>(q =>
                 q.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+            services.AddSwaggerDocumentation();
 
-            InjectServices(services);
         }
-        public void InjectServices(IServiceCollection services)
-        {
-            services.AddAutoMapper(typeof(MappingProfiles));
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMiddleware<ExceptionMiddleware>();
+
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+                app.UseSwaggerDocumentation();
             }
 
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseHttpsRedirection();
 
             app.UseRouting();
