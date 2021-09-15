@@ -1,3 +1,4 @@
+using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,8 +17,6 @@ namespace API
         {
             _config = config;
         }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -28,9 +27,13 @@ namespace API
             });
             services.AddDbContext<StoreContext>(q =>
                 q.UseSqlite(_config.GetConnectionString("DefaultConnection")));
-        }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            InjectServices(services);
+        }
+        public void InjectServices(IServiceCollection services)
+        {
+            services.AddScoped<IProductRepository, ProductRepository>();
+        }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
