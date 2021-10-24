@@ -12,8 +12,9 @@ import { ShopService } from './shop.service';
 })
 export class ShopComponent implements OnInit {
 
-  @ViewChild('search', { static: true }) searchTerm?: ElementRef;
+  @ViewChild('search') searchTerm?: ElementRef;
 
+  public loading: boolean = false;
   public products: IProduct[] = [];
   public brands: IBrand[] = [];
   public types: IType[] = [];
@@ -69,6 +70,7 @@ export class ShopComponent implements OnInit {
 
   //Private Methods
   private getProducts(): void {
+    this.loading = true;
     this.shopService.getProducts(this.shopParams).subscribe(
       response => {
         this.products = response?.data!;
@@ -78,10 +80,14 @@ export class ShopComponent implements OnInit {
       },
       error => {
         console.log(error);
+      },
+      () => {
+        this.loading = false;
       }
     );
   }
   private getBrands(): void {
+    this.loading = true;
     this.shopService.getBrands().subscribe(
       response => {
         this.brands = [
@@ -94,10 +100,14 @@ export class ShopComponent implements OnInit {
       },
       error => {
         console.log(error);
+      },
+      () => {
+        this.loading = false;
       }
     );
   }
   private getTypes(): void {
+    this.loading = true;
     this.shopService.getTypes().subscribe(
       response => {
         this.types = [
@@ -110,6 +120,9 @@ export class ShopComponent implements OnInit {
       },
       error => {
         console.log(error);
+      },
+      () => {
+        this.loading = false;
       }
     );
   }

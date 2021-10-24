@@ -1,5 +1,20 @@
-@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~bootswatch/dist/lux/bootstrap.min.css";
 @import "~ngx-bootstrap/datepicker/bs-datepicker";
 @import "~font-awesome/scss/font-awesome";
 @import "~ngx-toastr/toastr.css";
 
+.xng-breadcrumb-root {
+    padding: 8px 16px;
+    display: inline;
+    border-radius: 0;
+}
+
+label.xng-breadcrumb-trail {
+    margin-bottom: 0;
+    color: orange;
+}
+
+.xng-breadcrumb-separator {
+    padding: 0 0;
+}
