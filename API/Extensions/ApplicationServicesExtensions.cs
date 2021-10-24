@@ -40,6 +40,7 @@ namespace API.Extensions
         private static void InjectServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(MappingProfiles));
+            services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         }
